@@ -100,7 +100,7 @@ class SqliteHandler:
 
     def show_interests(self):
         show_interests_query = """
-            SELECT i.log, i.effort, GROUP_CONCAT(t.name, ',') FROM interests i INNER JOIN interests_tags it ON i.id = it.interest_id INNER JOIN tags t ON it.tag_id = t.id GROUP BY i.id;
+            SELECT i.log, i.effort, GROUP_CONCAT(t.name, ',') FROM interests i LEFT JOIN interests_tags it ON i.id = it.interest_id LEFT JOIN tags t ON it.tag_id = t.id GROUP BY i.id;
         """
         for row in self.cursor.execute(show_interests_query):
             print(row)
