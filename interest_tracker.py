@@ -107,7 +107,9 @@ class SqliteHandler:
 
 
 class InterestTracker:
-    def __init__(self):
+    def __init__(self, args=None):
+        self.args = sys.argv if args is None else args
+
         parser = argparse.ArgumentParser(
             description="Track your hacking sessions with this simple cli app.",
             usage="""interest-tracker.py <command> [<args>]
@@ -122,13 +124,13 @@ Available commands are:
         parser.add_argument("command", help="Subcommand to run")
         # parse_args defaults to [1:] for args, but you need to
         # exclude the rest of the args too, or validation will fail
-        args = parser.parse_args(sys.argv[1:2])
-        if not hasattr(self, args.command):
+        parsed_args = parser.parse_args(self.args[1:2])
+        if not hasattr(self, parsed_args.command):
             print("Unrecognized command")
             parser.print_usage()
             sys.exit(1)
         # use dispatch pattern to invoke method with same name
-        getattr(self, args.command)()
+        getattr(self, parsed_args.command)()
 
     def log(self):
         parser = argparse.ArgumentParser(description="Register a new hacking interest")
@@ -141,7 +143,7 @@ Available commands are:
         )
         # now that we're inside a subcommand, ignore the first
         # TWO argvs, ie the command (interest-tracker) and the subcommand (log)
-        args = parser.parse_args(sys.argv[2:])
+        args = parser.parse_args(self.args[2:])
         sql_handler = SqliteHandler()
         try:
             parsed_effort = parse_effort(args.effort)
@@ -160,5 +162,9 @@ Available commands are:
         sql_handler.show_interests()
 
 
+def main(args=None):
+    InterestTracker(args)
+
+
 if __name__ == "__main__":
-    InterestTracker()
+    main()
