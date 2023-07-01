@@ -1,6 +1,8 @@
 import pytest
 
-from interest_tracker import main
+from unittest.mock import patch
+
+from interest_tracker import main, SqliteHandler
 
 
 @pytest.mark.parametrize("option", ("-h", "--help"))
@@ -73,9 +75,45 @@ def test_log_command_requires_effort(capsys):
     assert "error: the following arguments are required: -e/--effort" in captured.err
 
 
-def test_interest_can_be_registered_with_log_command():
-    pass
+def test_interest_can_be_registered_with_log_command_without_tags():
+    with patch.object(SqliteHandler, "add_interest") as mock_add_interest:
+        try:
+            main(
+                [
+                    "./interest_tracker.py",
+                    "log",
+                    "registering interest from tests!",
+                    "-e",
+                    "00:15",
+                ]
+            )
+        except SystemExit:
+            pass
+
+        mock_add_interest.assert_called_with(
+            log="registering interest from tests!", effort=900, tags=[]
+        )
 
 
-def test_can_see_existing_interests_with_visualize_command():
-    pass
+def test_interest_can_be_registered_with_log_command_with_tags():
+    with patch.object(SqliteHandler, "add_interest") as mock_add_interest:
+        try:
+            main(
+                [
+                    "./interest_tracker.py",
+                    "log",
+                    "registering interest from tests!",
+                    "-e",
+                    "00:12",
+                    "-t",
+                    "pytest,mocks,tests",
+                ]
+            )
+        except SystemExit:
+            pass
+
+        mock_add_interest.assert_called_with(
+            log="registering interest from tests!",
+            effort=720,
+            tags=["pytest", "mocks", "tests"],
+        )
