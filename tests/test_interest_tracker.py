@@ -13,7 +13,7 @@ def test_can_output_top_level_help(capsys, option):
         "Track your hacking sessions with this simple cli app.",
         "positional arguments:",
         "command     Subcommand to run",
-        "options:",
+        "optional arguments:",
         "-h, --help  show this help message and exit",
     ]
     try:
