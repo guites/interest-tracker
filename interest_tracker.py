@@ -112,7 +112,7 @@ class InterestTracker:
 
         parser = argparse.ArgumentParser(
             description="Track your hacking sessions with this simple cli app.",
-            usage="""interest-tracker.py <command> [<args>]
+            usage="""interest_tracker.py <command> [<args>]
 
 Available commands are:
     log         Register a new hacking interest
