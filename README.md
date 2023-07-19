@@ -9,6 +9,15 @@ There are no dependencies aside from Python 3.10+.
 1. Clone the repository and change into the directory.
 2. Add executable permission to the script: `chmod u+x interest_tracker.py`.
 
+## Development
+
+1. Create a virtual environment and activate it.
+
+    python3 -m venv .venv
+    source .venv/bin/activate
+2. Install dependencies from `dev_requirements.txt`: `pip3 install -r dev_requirements.txt`.
+3. Run tests with `python3 -m pytest`.
+
 ## Usage
 
 Basic interest creation:
