@@ -135,9 +135,7 @@ Available commands are:
     def log(self):
         parser = argparse.ArgumentParser(description="Register a new hacking interest")
         parser.add_argument("log", metavar="LOG", help="What you've been hacking at")
-        parser.add_argument(
-            "-e", "--effort", required=True, help="How long you've been at it (HH:MM)"
-        )
+        parser.add_argument("-e", "--effort", help="How long you've been at it (HH:MM)")
         parser.add_argument(
             "-t", "--tags", help="Comma separated tags to group your interests"
         )
@@ -145,10 +143,14 @@ Available commands are:
         # TWO argvs, ie the command (interest-tracker) and the subcommand (log)
         args = parser.parse_args(self.args[2:])
         sql_handler = SqliteHandler()
-        try:
-            parsed_effort = parse_effort(args.effort)
-        except ValueError:
-            parser.error("EFFORT (-e, --effort) should be in HH:MM format")
+
+        if args.effort is not None:
+            try:
+                parsed_effort = parse_effort(args.effort)
+            except ValueError:
+                parser.error("EFFORT (-e, --effort) should be in HH:MM format")
+        else:
+            parsed_effort = None
 
         parsed_tags = parse_tags(args.tags)
 

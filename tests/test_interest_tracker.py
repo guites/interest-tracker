@@ -15,7 +15,7 @@ def test_can_output_top_level_help(capsys, option):
         "Track your hacking sessions with this simple cli app.",
         "positional arguments:",
         "command     Subcommand to run",
-        "optional arguments:",
+        "options:",
         "-h, --help  show this help message and exit",
     ]
     try:
@@ -30,11 +30,11 @@ def test_can_output_top_level_help(capsys, option):
 @pytest.mark.parametrize("option", ("-h", "--help"))
 def test_can_output_log_command_help(capsys, option):
     log_command_help_output = [
-        "usage: __main__.py [-h] -e EFFORT [-t TAGS] LOG",
+        "usage: __main__.py [-h] [-e EFFORT] [-t TAGS] LOG",
         "Register a new hacking interest",
         "positional arguments:",
         "  LOG                   What you've been hacking at",
-        "optional arguments:",
+        "options:",
         "  -h, --help            show this help message and exit",
         "-e EFFORT, --effort EFFORT",
         "How long you've been at it (HH:MM)",
@@ -54,25 +54,8 @@ def test_log_command_requires_log_and_effort(capsys):
         main(["./interest_tracker.py", "log"])
 
     captured = capsys.readouterr()
-    assert (
-        "error: the following arguments are required: LOG, -e/--effort" in captured.err
-    )
+    assert "error: the following arguments are required: LOG" in captured.err
     assert "error: the following arguments are required: command" not in captured.err
-
-
-def test_log_command_requires_effort(capsys):
-    with pytest.raises(SystemExit, match=r"2"):
-        main(
-            [
-                "./interest_tracker.py",
-                "log",
-                "testing argparser with pytest, capturing syserr/sysout in test cases",
-            ]
-        )
-
-    captured = capsys.readouterr()
-
-    assert "error: the following arguments are required: -e/--effort" in captured.err
 
 
 def test_interest_can_be_registered_with_log_command_without_tags():
